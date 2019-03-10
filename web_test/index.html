@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<html>
+    <body>
+        <button id="connect_ble">CONNECT (BLE)</button>
+        <input id="msg_ble"><button id="send_ble">SEND ALL (BLE)</button><br>
+        <button id="disconnect_all">DISCONNECT ALL DEVICES</button><br>
+        <button id="toggle_heartbeat">TOGGLE HEARTBEAT</button>
+    </body>
+    <script>
+        let _heartbeatEnabled = false;
+        const textDecoder = new TextDecoder();
+        const textEncoder = new TextEncoder();
+        // Web Bluetooth related
+        const ble_devices = new Map();
+        let ble_cmd_characteristic = null;
+
+        startHeartbeatNotifications = async (server) => {
+            const service = await server.getPrimaryService('12345678-1234-5678-1234-56789abcdef0');
+            const characteristic = await service.getCharacteristic('12345678-1234-5678-1234-56789abcdef1');
+            characteristic.addEventListener('characteristicvaluechanged', (evt) => {
+                const value = evt.target.value.getInt16(0, true);
+                if(_heartbeatEnabled) {
+                    console.log(`RX_BLE[${server.device.id}]: Heartbeat count = ${value}`);
+                }
+            });
+            return characteristic.startNotifications();
+        }
+
+        startDataNotifications = async (server) => {
+            const service = await server.getPrimaryService('12345678-1234-5678-1234-56789abcdef0');
+            const characteristic = await service.getCharacteristic('12345678-1234-5678-1234-56789abcdef2');
+            characteristic.addEventListener('characteristicvaluechanged', (evt) => {
+                console.log(`RX_BLE[${server.device.id}]: ${textDecoder.decode(evt.target.value)}`);
+            });
+            return characteristic.startNotifications();
+        }
+
+        fetchCmdCharacteristic = async (server) => {
+            const service = await server.getPrimaryService('12345678-1234-5678-1234-56789abcdef0');
+            server.device.cmdCharacteristic = await service.getCharacteristic('12345678-1234-5678-1234-56789abcdef3');
+        }
+
+        const writeToBLEDevice = (device, str) => {
+            console.log(`TX_BLE[${device.id}]:`, str);
+            const data = textEncoder.encode(str);
+            // Consider: Check length (max 20 bytes)
+            device.cmdCharacteristic.writeValue(data);
+        };
+
+        const openBLEDevice = async (device) => {
+            const server = await device.gatt.connect();
+            
+            try {
+                await startHeartbeatNotifications(server);
+                await startDataNotifications(server);
+                await fetchCmdCharacteristic(server);
+
+                ble_devices.set(`${device.id}`, device);
+
+                console.log(`connected BLE[${device.id}]`);
+
+                device.ongattserverdisconnected = _ => { ble_devices.delete(`${device.id}`)};
+            } catch (err) {
+                console.warn(err);
+            }
+        };
+
+        const initWebBluetooth = async () => {
+            const connectBLEBtn = document.querySelector("#connect_ble");
+            const sendBLEBtn = document.querySelector("#send_ble");
+            const msgBLEInput = document.querySelector("#msg_ble");
+
+            connectBLEBtn.addEventListener('click', async () => {
+                // TODO actual UUID (if you want to build a device)!!
+                const device = await navigator.bluetooth.requestDevice({
+                    filters: [{ services: ['12345678-1234-5678-1234-56789abcdef0'] }]
+                });
+
+                await openBLEDevice(device);
+            });
+
+            sendBLEBtn.addEventListener('click', async () => {
+                for(let [key, device] of ble_devices) {
+                    writeToBLEDevice(device, msgBLEInput.value);
+                }
+            });
+
+        };
+
+        window.addEventListener('load', async () => {
+            initWebBluetooth();
+
+            const disconnectAllBtn = document.querySelector("#disconnect_all");
+            const toggleHeartbeatBtn = document.querySelector("#toggle_heartbeat");
+
+
+            disconnectAllBtn.addEventListener('click', async () => {
+                for(let [key, device] of ble_devices) {
+                    device.gatt.disconnect();
+                }
+            });
+
+            toggleHeartbeatBtn.addEventListener('click', async () => { _heartbeatEnabled = !_heartbeatEnabled; } );
+        });
+
+    </script>
+</html>
