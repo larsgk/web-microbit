@@ -31,7 +31,6 @@ Documentation is here: https://lit-element.polymer-project.org
 
 Note: you will need node/npm and the polymer-cli as a minimum
 
-
 ### Zephyr
 https://docs.zephyrproject.org/latest/getting_started/getting_started.html
 
@@ -41,3 +40,18 @@ https://docs.zephyrproject.org/latest/boards/arm/bbc_microbit/doc/board.html
 
 To flash the device, just copy the resulting ```build/zephyr/zephyr.hex``` to the device (mass storage)
 
+## Credits
+
+A special thanks to
+
+https://github.com/carlescufi ( https://twitter.com/carlescufi ), 
+
+https://github.com/lemrey and 
+
+https://github.com/kenchris ( https://twitter.com/kennethrohde )
+
+for help with quirks in
+
+https://github.com/zephyrproject-rtos/zephyr/ ( https://twitter.com/ZephyrIoT ) and
+
+https://github.com/Polymer/lit-element ( https://twitter.com/polymer , https://twitter.com/justinfagnani )
