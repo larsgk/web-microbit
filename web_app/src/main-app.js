@@ -1,10 +1,10 @@
 // @ts-check
 import { LitElement, html, css } from "lit-element";
 
-import { BLEService } from '../services/ble-service';
+import { BLEService } from './services/ble-service';
 
-import "./microbit-board";
-import { BoardModel } from "../services/board-model";
+import "./components/microbit-board";
+import { BoardModel } from "./services/board-model";
 
 export class MainApp extends LitElement {
   static get properties() {

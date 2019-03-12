@@ -1,0 +1,35 @@
+{
+  "name": "WebBluetooth & Zephyr with the BBC MicroBit",
+  "short_name": "LitMicroBit demo",
+  "description": "A cool demo!",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0071c5",
+  "theme_color": "#0071c5",
+  "icons": [{
+      "src": "images/icon-48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    }, {
+      "src": "images/icon-72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    }, {
+      "src": "images/icon-96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    }, {
+      "src": "images/icon-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }, {
+      "src": "images/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }, {
+      "src": "images/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
