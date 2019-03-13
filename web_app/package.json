@@ -8,6 +8,9 @@
     "copyindex": "cp src/index.html build",
     "copywc": "cp -r node_modules/@webcomponents/webcomponentsjs/bundles build && cp node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js build",
     "build": "rm -rf build && mkdir build && npm run copyindex && npm run copywc && rollup -c",
+    "wincopyindex": "mkdir build & xcopy /K /D /H /Y src\\index.html build",
+    "wincopywc": "xcopy /K /D /H /Y node_modules\\@webcomponents\\webcomponentsjs\\bundles build & xcopy /K /D /H /Y  node_modules\\@webcomponents\\webcomponentsjs\\webcomponents-loader.js build",
+    "winbuild": "del /s /q .\\build\\* & rmdir /s /q .\\build\\* & mkdir build & npm run wincopyindex && npm run wincopywc & rollup -c",
     "watch": "rollup -c -w",
     "dev": "npm-run-all --parallel start watch",
     "start": "serve build"
