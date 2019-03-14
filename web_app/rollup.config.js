@@ -4,6 +4,7 @@ import babel from 'rollup-plugin-babel';
 import { terser } from "rollup-plugin-terser";
 import livereload from 'rollup-plugin-livereload';
 import copy from 'rollup-plugin-copy-assets-to';
+import cleaner from 'rollup-plugin-cleaner';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -15,10 +16,18 @@ export default {
 		sourcemap: true
 	},
 	plugins: [
+        production && cleaner({  // Only remove ./build when building for production.
+            targets: [
+              './build/'
+            ]
+        }),
         copy({
             assets: [
                 './images',
-                './manifest.json'
+                './manifest.json',
+                './src/index.html',
+                'node_modules/@webcomponents/webcomponentsjs/bundles',
+                'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js'
             ],
             outputDir: 'build'
         }),
