@@ -1,6 +1,6 @@
 {
   "name": "WebBluetooth & Zephyr with the BBC MicroBit",
-  "short_name": "LitMicroBit demo",
+  "short_name": "LitMicroBit",
   "description": "A cool demo!",
   "start_url": "index.html",
   "display": "standalone",

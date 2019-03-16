@@ -5,6 +5,7 @@ import { terser } from "rollup-plugin-terser";
 import livereload from 'rollup-plugin-livereload';
 import copy from 'rollup-plugin-copy-assets-to';
 import cleaner from 'rollup-plugin-cleaner';
+import workbox from 'rollup-plugin-workbox-build';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -37,6 +38,17 @@ export default {
         !production && livereload(),
         babel({
             exclude: 'node_modules/**',
+        }),
+        workbox({
+            mode: 'generateSW',
+            options: {
+                swDest: './build/sw.js',
+                globDirectory: './build',
+                globPatterns: [
+                    "**/*.{js,html,json,png}"
+                ],
+                // other workbox-build options depending on the mode
+            },
         }),
     ]
 };
