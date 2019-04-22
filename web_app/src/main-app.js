@@ -6,10 +6,13 @@ import { BLEService } from './services/ble-service';
 import "./components/microbit-board";
 import { BoardModel } from "./services/board-model";
 
+import { ServiceWorkerReg } from './reg-sw';
+
 export class MainApp extends LitElement {
   static get properties() {
     return {
-      devices: { type:Object }
+      devices: { type:Object },
+      updateAvailable: { type:Boolean }
     };
   }
 
@@ -50,6 +53,25 @@ export class MainApp extends LitElement {
         microbit-board {
           margin-bottom: 10px;
         }
+
+        .refresh {
+          position: fixed;
+          left: 20px;
+          bottom: 20px;
+          background: black;
+        }
+
+        a {
+          font-weight: bold;
+          line-height: 40px;
+          color: white;
+          margin: 20px;
+        }
+
+        a:hover {
+          color: purple;
+          cursor: pointer;
+        }
     `];
   }
 
@@ -77,6 +99,14 @@ export class MainApp extends LitElement {
     });
 
     BLEService.addEventListener('data', (/** @type {CustomEvent} */ evt) => { console.log('DATA', evt.detail)});
+
+    // Register Service Worker and listen for updates available.
+    this.updateAvailable = false;
+    ServiceWorkerReg.addEventListener('update-available', () => {
+      this.updateAvailable = true;
+      console.log('Update available');
+    });
+    ServiceWorkerReg.register();
   }
 
   render() {
@@ -94,10 +124,13 @@ export class MainApp extends LitElement {
           </div>
         </div>
       </div>
+      ${this.updateAvailable ? 
+        html`<div class="refresh"><a @click=${this.refresh}>REFRESH APP</a></div>` : ''}
     `;
   }
 
-  firstUpdated() {    
+  refresh() {
+    window.location.reload();    
   }
 }
 customElements.define("main-app", MainApp);

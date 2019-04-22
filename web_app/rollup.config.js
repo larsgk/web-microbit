@@ -15,7 +15,10 @@ export default {
 		file: 'build/index.js',
         format: 'es',
 		sourcemap: true
-	},
+    },
+    watch: {
+        include: ['src/**','src/index.html']
+    },
 	plugins: [
         production && cleaner({  // Only remove ./build when building for production.
             targets: [
@@ -47,6 +50,7 @@ export default {
                 globPatterns: [
                     "**/*.{js,html,json,png}"
                 ],
+                skipWaiting: true,
                 // other workbox-build options depending on the mode
             },
         }),
