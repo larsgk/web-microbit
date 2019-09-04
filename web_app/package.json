@@ -30,7 +30,7 @@
     "rollup-plugin-livereload": "^1.0.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.4",
-    "rollup-plugin-workbox-build": "^0.1.0",
-    "serve": "^10.1.1"
+    "serve": "^10.1.1",
+    "workbox-build": "^4.3.1"
   }
 }

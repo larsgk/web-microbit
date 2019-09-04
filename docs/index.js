@@ -182,7 +182,7 @@ const t=new WeakMap,e=e=>"function"==typeof e&&t.has(e),s=void 0!==window.custom
           width: 95%;
           max-width: 800px;
         }
-        
+
         .col {
           display: flex;
           flex-direction: column;

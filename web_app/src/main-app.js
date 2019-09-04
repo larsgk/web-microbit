@@ -16,7 +16,7 @@ export class MainApp extends LitElement {
     };
   }
 
-  static get styles() { 
+  static get styles() {
     return [
       css`
         .flex-container {
@@ -29,7 +29,7 @@ export class MainApp extends LitElement {
           width: 95%;
           max-width: 800px;
         }
-        
+
         .col {
           display: flex;
           flex-direction: column;
@@ -124,13 +124,13 @@ export class MainApp extends LitElement {
           </div>
         </div>
       </div>
-      ${this.updateAvailable ? 
+      ${this.updateAvailable ?
         html`<div class="refresh"><a @click=${this.refresh}>REFRESH APP</a></div>` : ''}
     `;
   }
 
   refresh() {
-    window.location.reload();    
+    window.location.reload();
   }
 }
 customElements.define("main-app", MainApp);

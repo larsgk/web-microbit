@@ -2,12 +2,21 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import { terser } from "rollup-plugin-terser";
-import livereload from 'rollup-plugin-livereload';
 import copy from 'rollup-plugin-copy-assets-to';
 import cleaner from 'rollup-plugin-cleaner';
-import workbox from 'rollup-plugin-workbox-build';
 
 const production = !process.env.ROLLUP_WATCH;
+
+function workbox(config) {
+	return {
+		name: 'workbox',
+            async writeBundle() {
+            let build = require('workbox-build');
+            const { count, size } = await build.generateSW(config);
+            console.log(count, size);
+        }
+	};
+}
 
 export default {
     input: 'src/index.js',
@@ -38,21 +47,17 @@ export default {
         resolve(),
         commonjs(),
         production && terser(), // minify, but only in production
-        !production && livereload(),
         babel({
             exclude: 'node_modules/**',
         }),
         workbox({
-            mode: 'generateSW',
-            options: {
-                swDest: './build/sw.js',
-                globDirectory: './build',
-                globPatterns: [
-                    "**/*.{js,html,json,png}"
-                ],
-                skipWaiting: true,
-                // other workbox-build options depending on the mode
-            },
+            swDest: './build/sw.js',
+            globDirectory: './build',
+            globPatterns: [
+                "**/*.{js,html,json,png}"
+            ],
+            skipWaiting: true,
+            // other workbox-build options depending on the mode
         }),
     ]
 };
